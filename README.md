@@ -24,27 +24,37 @@ from syncsweptsine import SyncSweep
 from syncsweptsine import HigherHarmonicImpulseResponse
 from syncsweptsine import HammersteinModel
 
-sweep = SyncSweep(startfreq=16, stopfreq=16000, durationappr=10, samplerate=96000)
+sweep = SyncSweep(
+    startfreq=16, 
+    stopfreq=16000, 
+    durationappr=10, 
+    samplerate=96000)
 
 def nonlinear_system(sig):
     return 1.0 * sig + 0.25 * sig**2 + 0.125 * sig**3
 
 outsweep = nonlinear_system(np.array(sweep))
-hhir = HigherHarmonicImpulseResponse.from_sweeps(sweep, outsweep)
+
+hhir = HigherHarmonicImpulseResponse.from_sweeps(
+    syncsweep=sweep, 
+    measuredsweep=outsweep)
+
 hm = HammersteinModel.from_higher_harmonic_impulse_response(
-    hhir, 2048, orders=(1, 2, 3), delay=0)
+    hhir=hhir, 
+    length=2048, 
+    orders=(1, 2, 3), 
+    delay=0)
+
 for kernel, order in zip(hm.kernels, hm.orders):
-    print('Coefficient estimate of nonlinear system:', 
-            np.round(np.percentile(abs(kernel.frf), 95), 3), 
-            'Order', 
-            order)
+    print('Coefficient estimate:',  np.round(np.percentile(abs(kernel.frf), 95), 3), 
+          'Order:', order)
 ```
 
 prints out:
 
 ```
-Coefficient estimate of nonlinear system: 1.009 Order 1
-Coefficient estimate of nonlinear system: 0.25 Order 2
-Coefficient estimate of nonlinear system: 0.125 Order 3
+Coefficient estimate: 1.009 Order: 1
+Coefficient estimate: 0.25 Order: 2
+Coefficient estimate: 0.125 Order: 3
 ``` 
             
