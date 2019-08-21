@@ -1,5 +1,9 @@
 # Synchronized Swept Sine Method
 
+[![Build Status](https://travis-ci.org/SiggiGue/syncsweptsine.svg?branch=master)](https://travis-ci.org/SiggiGue/syncsweptsine)
+
+[![Documentation Status](https://readthedocs.org/projects/syncsweptsine/badge/?version=latest)](https://syncsweptsine.readthedocs.io/en/latest/?badge=latest)
+
 This project implements the Synchronized Swept Sine Method as a reusable python package.
 It is structured according to the paper by Nowak et al. 2015, but equations and symbol names are adapted to code conventions, also known as PEP 8.
 Anyway, references to symbols and equations are given in the code comments. 
