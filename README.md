@@ -8,7 +8,7 @@ Most important classes are
 - `SyncSweep` for the generation of the synchronized swept sine singal
 - `HigherHarmonicImpulseResponse` for the deconvolution from sweep input and output signal.
 - `HammersteinModel` filtering of signals with the hammerstein model.
-- `LinearModel` filtering of signals with the linear kernel e.g.  from a HigherHarmonicImpulseResponse
+- `LinearModel` filtering of signals with the linear kernel e.g.  from a `HigherHarmonicImpulseResponse`
 
 Examples are placed in the examples folder.
 
@@ -27,7 +27,7 @@ def nonlinear_system(sig):
 outsweep = nonlinear_system(np.array(sweep))
 hhir = HigherHarmonicImpulseResponse.from_sweeps(sweep, outsweep)
 hm = HammersteinModel.from_higher_harmonic_impulse_response(
-    hhir, 2048, orders=(1, 2, 3), systemdelay=0)
+    hhir, 2048, orders=(1, 2, 3), delay=0)
 for kernel, order in zip(hm.kernels, hm.orders):
     print('Coefficient estimate of nonlinear system:', 
             np.round(np.percentile(abs(kernel.frf), 95), 3), 
