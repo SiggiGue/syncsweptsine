@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/SiggiGue/syncsweptsine.svg?branch=master)](https://travis-ci.org/SiggiGue/syncsweptsine)
 
+[![Coverage Status](https://coveralls.io/repos/github/SiggiGue/syncsweptsine/badge.svg)](https://coveralls.io/github/SiggiGue/syncsweptsine)
+
 [![Documentation Status](https://readthedocs.org/projects/syncsweptsine/badge/?version=latest)](https://syncsweptsine.readthedocs.io/en/latest/?badge=latest)
 
 This project implements the Synchronized Swept Sine Method as a reusable python package.

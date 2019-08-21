@@ -1,1 +1,4 @@
 numpydoc
+numpy
+scipy
+pylint = "^2.3"
