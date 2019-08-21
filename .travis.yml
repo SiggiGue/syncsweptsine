@@ -1,10 +1,15 @@
 language: python
+
 python:
 - 3.7
+
 before_install:
 - pip install poetry
+- pip install python-coveralls
+
 install:
 - poetry install
+
 script:
 - py.test . --cov=syncsweptsine --cov-report term-missing
 
