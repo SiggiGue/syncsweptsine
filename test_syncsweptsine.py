@@ -209,7 +209,7 @@ def test_frf_filter_kernel():
     assume(np.allclose(fkir.frf, fk.frf))
     fkm = fk.as_minimum_phase()
     min_phase = np.unwrap(np.angle(fkm.frf))
-    assume(np.all(np.abs(min_phase) <= np.pi))
+    assume(np.all(np.abs(min_phase) <= 2*np.pi))
 
 
 def test_iir_filter_kernel():
