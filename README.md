@@ -7,7 +7,7 @@
 [![Documentation Status](https://readthedocs.org/projects/syncsweptsine/badge/?version=latest)](https://syncsweptsine.readthedocs.io/en/latest/?badge=latest)
 
 This project implements the Synchronized Swept Sine Method as a reusable python package.
-It is structured according to the paper by Nowak et al. 2015, but equations and symbol names are adapted to code conventions, also known as PEP 8.
+It is structured according to the paper by [Nowak et al. 2015](https://doi.org/10.17743/jaes.2015.0071), but equations and symbol names are adapted to code conventions, also known as PEP 8.
 Anyway, references to symbols and equations are given in the code comments. 
 Most important classes are
 
