@@ -11,13 +11,12 @@ It is structured according to the paper by [Nowak et al. 2015](https://doi.org/1
 Anyway, references to symbols and equations are given in the code comments. 
 Most important classes are
 
-- `SyncSweep` for the generation of the synchronized swept sine singal
-- `HigherHarmonicImpulseResponse` for the deconvolution from sweep input and output signal.
-- `HammersteinModel` filtering of signals with the hammerstein model.
-- `LinearModel` filtering of signals with the linear kernel e.g.  from a `HigherHarmonicImpulseResponse`
+-  `SyncSweep` for the generation of the synchronized swept sine singal
+-  `HigherHarmonicImpulseResponse` for the deconvolution from sweep input and output signal.
+-  `HammersteinModel` filtering of signals with the hammerstein model.
+-  `LinearModel` filtering of signals with the linear kernel e.g.  from a `HigherHarmonicImpulseResponse`
 
 Examples are placed in the examples folder.
-
 
 ```python
 import numpy as np
@@ -40,6 +39,7 @@ for kernel, order in zip(hm.kernels, hm.orders):
             'Order', 
             order)
 ```
+
 prints out:
 
 ```

@@ -20,8 +20,8 @@ def test__typed_property():
     from syncsweptsine import _typed_property
     class T(object):
         prop_str = _typed_property(
-            name='prop_str', 
-            expected_type=str, 
+            name='prop_str',
+            expected_type=str,
             desc='This is a string property.')
         prop_scalar = _typed_property(
             name='prop_scalar',
@@ -46,7 +46,7 @@ def test__typed_property():
     tinst.prop_scalar = TESTSCALAR*3.1415
     with pytest.raises(TypeError):
         tinst.prop_scalar = '0.45234'
-        
+
     assume(hasattr(tinst, '_typed_property_was_changed'))
 
 
@@ -111,7 +111,7 @@ def test_sync_sweep(startfreq, stopfreq, durationappr, samplerate):
 
     # error between dur and approx dur is smaller than 5%:
     assume((sweep.duration/sweep.durationappr-1) < 0.05)
-    
+
     assume(sweep.sweepperiod > 0)
 
     assume(len(sweep.signal) == int(sweep.duration*sweep.samplerate)+1)
@@ -122,18 +122,18 @@ def test_sync_sweep(startfreq, stopfreq, durationappr, samplerate):
     assume(abs(abs(sweep.signal).max()-1) < 1e-6)  # amplitude is one.
     assume(np.all(sweep.signal[::-1] == sweep[::-1]))
     wsig = sweep.get_windowed_signal(
-        left=128, 
-        right=128, 
-        pausestart=1024, 
-        pausestop=2048, 
+        left=128,
+        right=128,
+        pausestart=1024,
+        pausestop=2048,
         amplitude=0.5)
     assume(len(wsig)==(len(sweep.signal)+1024+2048))
     assume(np.allclose(max(abs(wsig)), 0.5))
-    
+
 def test_invert_spectrum_reg():
     x = np.random.randn(128)
     X = np.fft.rfft(x)
-    
+
     beta = 1.0
     expected = X.conj() / (X*X.conj() + beta)
     assume(np.all(expected == invert_spectrum_reg(X, beta)))
@@ -147,7 +147,7 @@ def test_spectrum_to_minimum_phase():
     a = [1, 0.8]
     _, H = signal.freqz(b, a, whole=True)
     min_phase = spectrum_to_minimum_phase(H)
-    assert(np.allclose(np.unwrap(np.angle(H)), min_phase))
+    assume(np.allclose(np.unwrap(np.angle(H)), min_phase))
 
 def test_inverted_sync_sweep_spectrum():
     FFTLEN = 1024
@@ -175,8 +175,8 @@ def test_inverted_sync_sweep_spectrum():
     assume(np.all(ispec.spectrum[::-1] == ispec[::-1]))
     assume(np.array(ispec, dtype='complex256').dtype == np.complex256)
     assume(ispec.__repr__().startswith('InvertedSyncSweepSpectrum('))
-    
-    
+
+
 def test_higher_harmonic_impulse_response():
     sweep = SyncSweep(10, 10000, 5, 20000)
     hhir = HigherHarmonicImpulseResponse.from_sweeps(sweep, sweep)
@@ -232,7 +232,7 @@ def test_iir_filter_kernel():
     assume(fk.__repr__().startswith('IirFilterKernel('))
 
 def test_hammerstein_model():
-    
+
     sweep = SyncSweep(startfreq=16, stopfreq=16000, durationappr=10, samplerate=96000)
 
     def nonlinear_system(sig):
@@ -249,7 +249,7 @@ def test_hammerstein_model():
     expectedcoeffs = [1.0, 0.25, 0.125]
     for kernel, expc in zip(hm.kernels, expectedcoeffs):
         assume(abs(np.percentile(abs(kernel.frf), 95)-expc) < 0.01)
-    
+
     with pytest.raises(ValueError):
         hm = HammersteinModel.from_higher_harmonic_impulse_response(
             hhir, 96e4, orders=(1, 2, 3), delay=0)

@@ -12,8 +12,8 @@ High level classes:
 
 - :class:`SyncSweep`: defines the synchronized sweep model
 
-- :class:`HigherHarmonicImpulseResponse`: defines the Higher harmonic impulse response 
-  e.g. by deconvolution of the reference SyncSweep instance and 
+- :class:`HigherHarmonicImpulseResponse`: defines the Higher harmonic impulse response
+  e.g. by deconvolution of the reference SyncSweep instance and
   the actual measured sweep signal at the output of the system under test.
 
 - :class:`HammersteinModel`: defines the generalized hammerstein model based on a list of kernels and corresponding nonlinearity orders.
@@ -49,12 +49,12 @@ Estimating the coefficients of a simple nonlinear system:
     hm = HammersteinModel.from_higher_harmonic_impulse_response(
         hhir, 2048, orders=(1, 2, 3), delay=0)
     for kernel, order in zip(hm.kernels, hm.orders):
-        print('Coefficient estimate of nonlinear system:', 
-                np.round(np.percentile(abs(kernel.frf), 95), 3), 
-                'Order', 
+        print('Coefficient estimate of nonlinear system:',
+                np.round(np.percentile(abs(kernel.frf), 95), 3),
+                'Order',
                 order)
 
-    Out[7]: 
+    Out[7]:
     Coefficient estimate of nonlinear system: 1.009 Order 1
     Coefficient estimate of nonlinear system: 0.25 Order 2
     Coefficient estimate of nonlinear system: 0.125 Order 3
@@ -75,7 +75,7 @@ Estimating the Hammerstein model of a theoretically created Hammerstein model us
     nfft = 1024
     samplerate = 96000
     # sweep params:
-    f1 = 1.2 
+    f1 = 1.2
     f2 = 16_000
     dursec = 30
 
@@ -117,16 +117,16 @@ Estimating the Hammerstein model of a theoretically created Hammerstein model us
 
         ax = subplot(len(orders), 1, order )
         l0 = ax.semilogx(
-            freq_theo/pi*samplerate/2, 
-            20*log10(abs(G_kernel_theo)), 
+            freq_theo/pi*samplerate/2,
+            20*log10(abs(G_kernel_theo)),
             'b-',
             label=f'|H| Theor. (order={order})'
             )
         l1 = ax.semilogx(
-            freq, 
+            freq,
             20*log10(abs(G_kernel)),
             '--',
-            color='skyblue', 
+            color='skyblue',
             label=f'|H| Estimate (order={order})'
             )
         xlim(4*f1, f2)
@@ -134,21 +134,21 @@ Estimating the Hammerstein model of a theoretically created Hammerstein model us
         ylabel('$|H|$ / dB')
         if order < max(orders): xticks([])
         grid()
-        
+
         for ytlabel in ax.get_yticklabels(): ytlabel.set_color('b')
 
         ax2 = gca().twinx()
         ylim(-pi, pi)
         l2 = ax2.semilogx(
-            freq_theo/pi*samplerate/2, 
-            unwrap(angle(G_kernel_theo)), 
+            freq_theo/pi*samplerate/2,
+            unwrap(angle(G_kernel_theo)),
             'g-',
             label=f'$\\phi$ Theor. (order={order})'
             )
         phi_theo = unwrap(angle(G_kernel*exp(-1j*freq*pi*nfft/hhir.samplerate)))
         l3 = ax2.semilogx(
-            freq, 
-            phi_theo, 
+            freq,
+            phi_theo,
             '--',
             color='lightgreen',
             label=f'$\\phi$ Estimate (order={order})'
@@ -191,7 +191,7 @@ def _typed_property(name, expected_type, desc=None):
     >>>         self.color = color
 
     >>> Apple('red')
-    Out[6]: <__main__.Apple at 0x7f92b84913c8>        
+    Out[6]: <__main__.Apple at 0x7f92b84913c8>
 
     >>> badapple = Apple('brown')
     >>> badapple.color = 1
@@ -199,11 +199,11 @@ def _typed_property(name, expected_type, desc=None):
 
     """
     storage_name = ''.join(('_' , name))
-    
+
     @property
     def prop(self):
         return getattr(self, storage_name)
-    
+
     @prop.setter
     def prop(self, value):
         if isinstance(value, expected_type) or value is None:
@@ -250,9 +250,9 @@ def hannramp(sig, left, right=None):
 
     Warning
     -------
-    The input signal is modified. If you don't want your providing signal 
+    The input signal is modified. If you don't want your providing signal
     variable be modified, pleas create a copy of the signal e.g. np.array(sig).
-    
+
     """
     winleft, winright = get_hann_win_flanks(left, right)
     right = right or left
@@ -278,7 +278,7 @@ class SyncSweep(object):
     Returns
     -------
     sweep : SyncSweep
-    
+
     Examples
     --------
     >>> sweep = SyncSweep(16, 16000, 5, 44100)
@@ -287,19 +287,19 @@ class SyncSweep(object):
     """
     _typed_property_was_changed = True
     startfreq = _typed_property(
-        name='startfreq', 
+        name='startfreq',
         expected_type=(float, int),
         desc='Start frequency in Hz')
     stopfreq = _typed_property(
-        name='stopfreq', 
+        name='stopfreq',
         expected_type=(float, int),
         desc='Stop frequency in Hz')
     durationappr = _typed_property(
-        name='durationappr', 
+        name='durationappr',
         expected_type=(float, int),
         desc='Approximate/planned duration in seconds.')
     samplerate = _typed_property(
-        name='samplerate', 
+        name='samplerate',
         expected_type=(float, int),
         desc='Sample rate of the signal in Hz.')
 
@@ -322,7 +322,7 @@ class SyncSweep(object):
         self._phi = None
         self._signal = None
         self._update()
-        
+
     @property
     def signal(self):
         """Returns the sweep time signal."""
@@ -334,7 +334,7 @@ class SyncSweep(object):
         """Actual duration of the sweep."""
         self._update()
         return self._duration
-    
+
     @property
     def sweepperiod(self):
         """Returns the sweep period
@@ -342,10 +342,10 @@ class SyncSweep(object):
         """
         self._update()
         return self._sweepperiod
-        
+
     @property
     def time(self):
-        """Time vector 
+        """Time vector
         relating to given samplerate and actual duration."""
         self._update()
         return self._time
@@ -357,9 +357,9 @@ class SyncSweep(object):
             self._typed_property_was_changed = False
 
     def _calculate_sweep(self):
-        """This method calculates the actual sweep 
+        """This method calculates the actual sweep
         using current state of input parameters.
-        
+
         Some interim results variables will be available
         as readonly properties.
 
@@ -371,15 +371,15 @@ class SyncSweep(object):
         samplerate = self.samplerate
         SyncSweep._check_parameters(startfreq, stopfreq, durationappr, samplerate)
         logfreqratio = _np.log(stopfreq/startfreq)  # ln(f2/f1)
-        
+
         # symbol $k$, eq. 32 from paper
-        kappa = _np.round(startfreq*durationappr/logfreqratio)  
-        
+        kappa = _np.round(startfreq*durationappr/logfreqratio)
+
         # symbol $T$ in paper
         duration = kappa * logfreqratio / startfreq
 
         # symbol L in paper
-        sweepperiod = kappa / startfreq  
+        sweepperiod = kappa / startfreq
         dt = 1.0 / samplerate
         time = _np.arange(0, duration, dt)
         # eq. 33 from paper
@@ -395,7 +395,7 @@ class SyncSweep(object):
         self._duration = duration
         self._time = time
         self._signal = sweep
-    
+
     def get_windowed_signal(self, left, right, pausestart=0, pausestop=0, amplitude=1):
         """Returns windowd sweep signal
 
@@ -432,11 +432,11 @@ class SyncSweep(object):
         stopfreq = SyncSweep._limit_stopfreq(stopfreq, samplerate)
         if startfreq < 0 or stopfreq < 0:
             raise ValueError(
-                '`startfreq` (={}) and `stopfreq` (={}) must be bigger than 0.'.format( 
+                '`startfreq` (={}) and `stopfreq` (={}) must be bigger than 0.'.format(
                 startfreq, stopfreq))
         if stopfreq and startfreq >= stopfreq:
             raise ValueError(
-                '`startfreq` (={}) must be smaller than `stopfreq` (={}).'.format( 
+                '`startfreq` (={}) must be smaller than `stopfreq` (={}).'.format(
                 startfreq, stopfreq))
         if durationappr <= 0:
             raise ValueError('`durationappr` ', durationappr, ' must be bigger than 0.')
@@ -453,7 +453,7 @@ class SyncSweep(object):
 
     def __array__(self, dtype=None):
         """Support ndarray casting."""
-        if dtype:   
+        if dtype:
             return self.signal.astype(dtype)
         return self.signal
 
@@ -464,20 +464,20 @@ class SyncSweep(object):
     def __repr__(self):
         """Nice reprint of the instance with actual parameters."""
         return ("SyncSweep(\n"
-            "    startfreq={},\n" 
+            "    startfreq={},\n"
             "    stopfreq={},\n"
             "    duration={},\n"
             "    samplerate={})\n"
             ).format(
-                self.startfreq, 
-                self.stopfreq, 
-                self.duration, 
+                self.startfreq,
+                self.stopfreq,
+                self.duration,
                 self.samplerate)
 
 
 def invert_spectrum_reg(spec, beta):
     """Returns inverse spec with regularization by beta
-    
+
     Parameters
     ----------
     spec : ndarray
@@ -528,7 +528,7 @@ class InvertedSyncSweepSpectrum(object):
         Number of spectral bins.
     regularize : bool
         Apply reqularization, default is True.
-    
+
     Notes
     -----
     If you want to invert a SyncSweep instance use the :func:`InvertedSyncSweepSpectrum.from_sweep()`.
@@ -536,7 +536,7 @@ class InvertedSyncSweepSpectrum(object):
     Returns
     -------
     sweep : SyncSweep
-    
+
     Examples
     --------
     >>> sweep = SyncSweep(16, 16000, 5, 44100)
@@ -550,12 +550,12 @@ class InvertedSyncSweepSpectrum(object):
 
     """
 
-    def __init__(self, 
-                 samplerate, 
-                 sweepperiod, 
-                 startfreq, 
-                 stopfreq, 
-                 fftlen, 
+    def __init__(self,
+                 samplerate,
+                 sweepperiod,
+                 startfreq,
+                 stopfreq,
+                 fftlen,
                  regularize=True):
         self._samplerate = samplerate
         self._sweepperiod = sweepperiod
@@ -572,18 +572,18 @@ class InvertedSyncSweepSpectrum(object):
     def from_sweep(cls, syncsweep, fftlen, regularize=True):
         """Returns a InvertedSyncSweepSpectrum instance for given syncsweep.
         Creates the analytical solution of the spectrum according to eq. 43.
-        
+
         Parameters
         ----------
-        syncsweep : SyncSweep 
+        syncsweep : SyncSweep
             Instance of a SyncSweep.from_syncsweep
         fftlen : int
             Length of fft for spectrum creation
         regularize : bool
         """
         return cls(
-            samplerate=syncsweep.samplerate, 
-            sweepperiod=syncsweep.sweepperiod, 
+            samplerate=syncsweep.samplerate,
+            sweepperiod=syncsweep.sweepperiod,
             startfreq=syncsweep.startfreq,
             stopfreq=syncsweep.stopfreq,
             fftlen=fftlen)
@@ -604,7 +604,7 @@ class InvertedSyncSweepSpectrum(object):
     def fftlen(self):
         """Number of fft bins."""
         return self._fftlen
-    
+
     @fftlen.setter
     def fftlen(self, value):
         """Set the number of fft bins."""
@@ -615,7 +615,7 @@ class InvertedSyncSweepSpectrum(object):
         if self._changes:
             self._calculate_inverted_sweep_spectrum()
             self._changes = False
-        
+
     def _calculate_inverted_sweep_spectrum(self):
         samplerate = self._samplerate
         sweepperiod = self._sweepperiod
@@ -628,7 +628,7 @@ class InvertedSyncSweepSpectrum(object):
             * (1-_np.log(freq[1:]/startfreq))
             + 1j*_np.pi/4))
         self._spectrum = spectrum
-        self._freq = freq 
+        self._freq = freq
 
     def __getitem__(self, index):
         """Allow slicing of the spectrum."""
@@ -657,14 +657,14 @@ class InvertedSyncSweepSpectrum(object):
                 self._startfreq)
             )
 
-    
+
 class HigherHarmonicImpulseResponse(object):
-    """Higher Harmonic Impulse Response 
+    """Higher Harmonic Impulse Response
     Signal containing Impulse responsens for all harmonics.
 
     To create a HigherHarmonicImpulseResponse from sweep input and output signals,
-    use the HigherHarmonicImpulseResponse.from_sweeps() class method.    
-    
+    use the HigherHarmonicImpulseResponse.from_sweeps() class method.
+
     Parameters
     ----------
     hhir : ndarray
@@ -682,9 +682,9 @@ class HigherHarmonicImpulseResponse(object):
     hhir : HigherHarmonicImpulseResponse
 
     Notes
-    -----    
+    -----
     To create a HigherHarmonicImpulseResponse from sweep input and output signals,
-    use the HigherHarmonicImpulseResponse.from_sweeps() class method.    
+    use the HigherHarmonicImpulseResponse.from_sweeps() class method.
 
     Examples
     --------
@@ -696,7 +696,7 @@ class HigherHarmonicImpulseResponse(object):
     :func:`HigherHarmonicImpulseResponse.from_sweeps`
 
     :func:`HigherHarmonicImpulseResponse.from_spectra`
-    
+
     :class:`SyncSweep`
 
     :class:`HammersteinModel`
@@ -723,7 +723,7 @@ class HigherHarmonicImpulseResponse(object):
 
     def hir_index(self, order, length, delay=0):
         """Returns the index the harmonic impulse response of `order` and `length`.
-        
+
         Parameters
         ----------
         order : int
@@ -734,10 +734,10 @@ class HigherHarmonicImpulseResponse(object):
             Delay of system under test the hhir was derived from.
 
         """
-        return (_np.arange(length) 
-            + len(self.hhir) 
+        return (_np.arange(length)
+            + len(self.hhir)
             - length//2  # because the returned impulse response is acausal
-            - self.hir_sample_position(order) 
+            - self.hir_sample_position(order)
             + delay)
 
     def max_hir_length(self, order):
@@ -753,10 +753,10 @@ class HigherHarmonicImpulseResponse(object):
 
         Notes
         -----
-        The HHIR contains all harmonic impulse responses (HIR). 
+        The HHIR contains all harmonic impulse responses (HIR).
         For slicing one specific HIR there is a maximum number of
         samples around this HIR. A bigger slice may contain parts
-        of neighbouring HIRs. 
+        of neighbouring HIRs.
         Depending on the highest order there is a maximum length.
 
         """
@@ -766,7 +766,7 @@ class HigherHarmonicImpulseResponse(object):
 
     def harmonic_impulse_response(self, order, length, delay=0, window=None):
         """Returns the harmonic impulse response of `order` and `length`
-                
+
         Parameters
         ----------
         order : int
@@ -778,8 +778,8 @@ class HigherHarmonicImpulseResponse(object):
 
         """
         sig = _np.take(
-            self.hhir, 
-            self.hir_index(order, length, delay), 
+            self.hhir,
+            self.hir_index(order, length, delay),
             mode='wrap')
         if _np.any(window):
             if isinstance(window, int):
@@ -789,17 +789,17 @@ class HigherHarmonicImpulseResponse(object):
             elif (type(window) == _np.ndarray) and len(window):
                 sig = sig*window
         return sig
-    
+
     @classmethod
     def from_sweeps(cls, syncsweep, measuredsweep, fftlen=None):
         """Returns  Higher Harmonic Impulse Response instance for given sweep signals.
 
         Parameters
         ----------
-        syncsweep : SyncSweep 
+        syncsweep : SyncSweep
             A SyncSweep instance.
         measuredsweep : ndarray
-            Measured sweep. 
+            Measured sweep.
             Must be the output signal of the system under test excited with the provided `syncsweep`.
             Besides it must be sampled at the same samplerate as the provided syncsweep.
         fftlen : int
@@ -810,9 +810,9 @@ class HigherHarmonicImpulseResponse(object):
         rspec = _np.fft.rfft(measuredsweep, fftlen) / syncsweep.samplerate
         rinvspec = InvertedSyncSweepSpectrum.from_sweep(syncsweep, fftlen=fftlen)
         return cls.from_spectra(
-            rspec=rspec, 
-            rinvspec=rinvspec, 
-            sweepperiod=syncsweep.sweepperiod, 
+            rspec=rspec,
+            rinvspec=rinvspec,
+            sweepperiod=syncsweep.sweepperiod,
             samplerate=syncsweep.samplerate)
 
     @classmethod
@@ -849,7 +849,7 @@ class FrfFilterKernel(object):
     ir : ndarray
         Impulse response (optional)
         If you just have an impulse response use the `FrfFilterKernel.from_ir()` classmethod.
-    
+
     See also
     --------
     :class:`HammersteinModel`
@@ -889,7 +889,7 @@ class FrfFilterKernel(object):
     def filter(self, x):
         """Returns the convolved signal `x`."""
         return _spsignal.convolve(self._ir, x)
-    
+
     def as_minimum_phase(self):
         """Returns a filter kernel with minimum phase response."""
         frf = _np.array(self.frf)
@@ -920,32 +920,32 @@ class IirFilterKernel(object):
     --------
     :class:`HammersteinModel`
 
-    """     
-    def __init__(self, bcoeff, acoeff):   
+    """
+    def __init__(self, bcoeff, acoeff):
         self._bcoeff = bcoeff
         self._acoeff = acoeff
-        
+
     def filter(self, x, axis=-1, zi=None):
         """Returns the filtered signal `x`.
         For more info see help of `scipy.signal.lfilter`.
 
         """
         return _spsignal.lfilter(self._bcoeff, self._acoeff, x, axis, zi)
-    
+
     def freqz(self, nfft):
         """Returns the frequency response for the IIR Filter Kernel.
-        
+
         Parameters
         ----------
         nfft : int
             Number of bins.
-            
+
         """
         return _spsignal.freqz(self._bcoeff, self._acoeff, int(1 + 0.5*nfft))
 
     def to_frf_filter_kernel(self, nfft):
         """Returns a FrfFilterKernel instance
-        
+
         Parameters
         ----------
         nfft : int
@@ -960,10 +960,10 @@ class IirFilterKernel(object):
 
 class HammersteinModel(object):
     """Hammerstein Model
-    
+
     .. math::
-    
-        y = f(x) = \\sum_n^N x^n * h_n 
+
+        y = f(x) = \\sum_n^N x^n * h_n
 
     A Hammerstein model can be created from a :class:`HigherHarmonicImpulseResponse` by
     using the method :func:`HammersteinModel.from_higher_harmonic_impulse_response()`.
@@ -981,7 +981,7 @@ class HammersteinModel(object):
     :class:`HigherHarmonicImpulseResponse`
 
     :class:`FrfFilterKernel`
-    
+
     :class:`IirFilterKernel`
 
     """
@@ -1010,7 +1010,7 @@ class HammersteinModel(object):
         maxlength = hhir.max_hir_length(max(orders))
         if length > maxlength:
             raise ValueError(
-                f'Given `length` {length} must not be bigger than {maxlength}.' 
+                f'Given `length` {length} must not be bigger than {maxlength}.'
                 f' Otherwise other harmonic impulse responses will corrupt your kernels.')
         freq = _np.fft.rfftfreq(length, 1/hhir.samplerate)
         transformation_matrix = cls.create_kernel_to_hhfrf_transformation_matrix(orders)
@@ -1020,7 +1020,7 @@ class HammersteinModel(object):
         hhfrf_matrix = _np.array(list(hhfrfs))
         # transform higher harmonic frequency responses to hammerstein kernels by using the transformation matrix
         kernels_matrix = _np.dot(_np.linalg.inv(transformation_matrix), hhfrf_matrix)
-        # create filter kernels 
+        # create filter kernels
         kernels = [FrfFilterKernel(freq=freq, frf=frf) for frf in kernels_matrix]
         # return the hammerstein instance
         return cls(kernels, orders)
@@ -1038,7 +1038,7 @@ class HammersteinModel(object):
     @staticmethod
     def create_kernel_to_hhfrf_transformation_matrix(orders):
         """Returns a transformation matrix for combining kernels to higher harmonic frequency response functions
-        
+
         Parameters
         ----------
         orders : int
@@ -1064,7 +1064,7 @@ class HammersteinModel(object):
                 cursig = sig**order
             else:
                 cursig = sig
-            
+
             yield kernel.filter(cursig)
 
     def filter(self, sig):
@@ -1082,7 +1082,7 @@ class LinearModel(object):
     ----------
     kernel : FilterKernel
         A kernel instance with a filter method
-    
+
 
     See also
     --------
@@ -1117,7 +1117,7 @@ class LinearModel(object):
         maxlength = hhir.max_hir_length(order=1)
         if length > maxlength:
             raise ValueError(
-                f'Given `length` {length} must not be bigger than {maxlength}.' 
+                f'Given `length` {length} must not be bigger than {maxlength}.'
                 f' Otherwise other harmonic impulse responses will corrupt your linear model kernel.')
         # slice the harmonic impulse responses and calculate the linear filter kernel.
         kernel = FrfFilterKernel.from_ir(
@@ -1125,7 +1125,7 @@ class LinearModel(object):
             samplerate=hhir.samplerate
         )
         return cls(kernel)
-    
+
     @classmethod
     def from_hammerstein_model(cls, hmodel):
         """Returns a LinearModel of the given HammersteinModel.
@@ -1137,7 +1137,7 @@ class LinearModel(object):
         Returns
         -------
         lmodel : LinearModel
-    
+
         """
         return cls(hmodel.kernels[0])
 
