@@ -18,7 +18,7 @@ python:
   version: 3.7
   install:
     - method: pip
-        extra_requirements:
-            - poetry
+      extra_requirements:
+         - poetry
     - requirements: pyproject.toml
           
