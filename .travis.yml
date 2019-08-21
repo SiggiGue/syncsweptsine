@@ -6,7 +6,7 @@ before_install:
 install:
 - poetry install
 script:
-- python -m pytest -v --cov=syncsweptsine
+- py.test . --cov=syncsweptsine --cov-report term-missing
 
 after_success:
 - coveralls
