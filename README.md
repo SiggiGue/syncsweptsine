@@ -7,7 +7,7 @@
 [![Documentation Status](https://readthedocs.org/projects/syncsweptsine/badge/?version=latest)](https://syncsweptsine.readthedocs.io/en/latest/?badge=latest)
 
 This project implements the Synchronized Swept Sine Method as a reusable python package.
-It is structured according to the paper by [Nowak et al. 2015](https://doi.org/10.17743/jaes.2015.0071), but equations and symbol names are adapted to code conventions, also known as PEP 8.
+It is structured according to the papers by [Novak et al. 2015](https://doi.org/10.17743/jaes.2015.0071) and [Novak et al. 2010](https://doi.org/10.1109/TIM.2009.2031836), but equations and symbol names are adapted to code conventions, also known as PEP 8.
 Anyway, references to symbols and equations are given in the code comments. 
 Most important classes are
 
@@ -57,4 +57,11 @@ Coefficient estimate: 1.009 Order: 1
 Coefficient estimate: 0.25 Order: 2
 Coefficient estimate: 0.125 Order: 3
 ``` 
-            
+
+## References
+
+
+*  [A. Novak, P. Lotton, and L. Simon](https://doi.org/10.1109/TIM.2009.2031836):  “Synchronized Swept-Sine: Theory, Application, and Implementation,” J. Audio Eng. Soc., vol. 63, no. 10, pp. 786–798, Nov. 2015.
+
+
+*  [A. Novák, L. Simon, F. Kadlec, and P. Lotton](https://doi.org/10.1109/TIM.2009.2031836):  “Nonlinear System Identification Using Exponential Swept-Sine Signal,” IEEE Trans. Instrum. Meas., vol. 59, no. 8, pp. 2220–2229, Aug. 2010.
