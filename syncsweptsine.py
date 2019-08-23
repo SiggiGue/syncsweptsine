@@ -283,6 +283,23 @@ class SyncSweep(object):
     --------
     >>> sweep = SyncSweep(16, 16000, 5, 44100)
 
+    .. plot::
+
+        import matplotlib.pyplot as plt
+        from syncsweptsine import SyncSweep
+        plt.subplot(211)
+        plt.plot(SyncSweep(16, 64, 1, 44100))
+        plt.title('Example Sweep')
+        plt.xlim([0, 43000])
+        plt.ylabel('amplitude')
+        plt.subplot(212)
+        plt.specgram(SyncSweep(200, 20050, 1, 44100), NFFT=512, noverlap=256, Fs=1);
+        plt.ylabel('frequency')
+        plt.xlabel('sample')
+        plt.xlim([0, 43000])
+        plt.show()
+
+
 
     """
     _typed_property_was_changed = True
@@ -535,16 +552,32 @@ class InvertedSyncSweepSpectrum(object):
 
     Returns
     -------
-    sweep : SyncSweep
+    ispec : InvertedSyncSweepSpectrum instance
 
     Examples
     --------
     >>> sweep = SyncSweep(16, 16000, 5, 44100)
     >>> inv_sweep = InvertedSyncSweepSpectrum.from_sweep(sweep)
 
+
+    .. plot::
+
+        import matplotlib.pyplot as plt
+        import numpy as np
+        from syncsweptsine import SyncSweep, InvertedSyncSweepSpectrum
+        inv_spec = InvertedSyncSweepSpectrum.from_sweep(SyncSweep(16, 16000, 1, 44100), 8192)
+        plt.subplot(211)
+        plt.plot(inv_spec.freq, abs(inv_spec.spectrum))
+        plt.ylabel('magnitude')
+        plt.subplot(212)
+        plt.plot(inv_spec.freq, np.angle(inv_spec.spectrum))
+        plt.ylabel('phase')
+        plt.xlabel('frequency')
+        plt.show()
+        
     See also
     --------
-    :func:`InvertedSyncSweepSpectrum.from_sweeps`
+    :func:`InvertedSyncSweepSpectrum.from_sweep`
 
     :class:`SyncSweep`
 
@@ -689,7 +722,23 @@ class HigherHarmonicImpulseResponse(object):
     Examples
     --------
     >>> sweep = SyncSweep(16, 16000, 5, 44100)
-    >>> inv_sweep = InvertedSyncSweepSpectrum.from_sweep(sweep)
+    >>> measured = sweep.signal + 0.3*sweep.signal**3 + 0.1*sweep.signal**2 + 0.8*sweep.signal**4
+    >>> hhir = HigherHarmonicImpulseResponse.from_sweeps(sweep, measured)
+
+    .. plot::
+
+        import matplotlib.pyplot as plt
+        from syncsweptsine import SyncSweep, HigherHarmonicImpulseResponse
+        sweep = SyncSweep(10, 10000, 5, 80000)
+        sig = sweep.get_windowed_signal(4096, 4096, 2*8192, 4*8192)
+        measured = sig + 0.5*sig**2 + 0.25*sig**3
+        hhir = HigherHarmonicImpulseResponse.from_sweeps(sweep, measured)
+        plt.plot(hhir)
+        plt.xlim([0, len(hhir.hhir)])
+        plt.xlabel('sample')
+        plt.ylabel('amplitude')
+        plt.title('Higher Harmonic Impulse Response')
+        plt.show()
 
     See also
     --------
