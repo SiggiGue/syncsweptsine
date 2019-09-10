@@ -12,7 +12,7 @@ samplerate = 96000
 # sweep params:
 f1 = 2.4 
 f2 = 24_000
-dursec = 30
+dursec = 10
 
 # Filter kernels for theoretical hammerstein model:
 # the ARMA filters definition (ARMA order = 2, number of filters = N = 4)
@@ -35,7 +35,7 @@ hm_theo = HammersteinModel(kernels_theo, orders)
 sweep = SyncSweep(f1, f2, dursec, samplerate)
 sweep_sig = sweep.get_windowed_signal(1024, 1024, pausestart=0, pausestop=512)
 outsweep = hm_theo.filter(sweep_sig)
-hhir = HigherHarmonicImpulseResponse.from_sweeps(sweep, outsweep)
+hhir = HigherHarmonicImpulseResponse.from_sweeps(sweep, outsweep, regularize=False)
 hm_identified = HammersteinModel.from_higher_harmonic_impulse_response(
     hhir=hhir,
     length=nfft,
@@ -83,10 +83,10 @@ for theo, kernel, order in zip(hm_theo.kernels, hm_identified.kernels, orders):
         color='limegreen',
         label=f'$\\phi$ Theor. (order={order})'
         )
-    phi_theo = unwrap(angle(G_kernel*exp(-1j*freq*pi*nfft/hhir.samplerate)))
+    phi_est = (angle(G_kernel*exp(-1j*freq*pi*nfft/hhir.samplerate)))
     l3 = ax2.semilogx(
         freq, 
-        phi_theo, 
+        phi_est, 
         '--',
         color='darkgreen',
         label=f'$\\phi$ Estimate (order={order})'
