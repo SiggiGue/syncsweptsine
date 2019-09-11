@@ -61,7 +61,7 @@ Coefficient estimate: 0.125 Order: 3
 ## References
 
 
-*  [A. Novak, P. Lotton, and L. Simon](https://doi.org/10.1109/TIM.2009.2031836):  “Synchronized Swept-Sine: Theory, Application, and Implementation,” J. Audio Eng. Soc., vol. 63, no. 10, pp. 786–798, Nov. 2015.
+*  [A. Novak, P. Lotton, and L. Simon](https://doi.org/10.17743/jaes.2015.0071):  “Synchronized Swept-Sine: Theory, Application, and Implementation,” J. Audio Eng. Soc., vol. 63, no. 10, pp. 786–798, Nov. 2015.
 
 
 *  [A. Novák, L. Simon, F. Kadlec, and P. Lotton](https://doi.org/10.1109/TIM.2009.2031836):  “Nonlinear System Identification Using Exponential Swept-Sine Signal,” IEEE Trans. Instrum. Meas., vol. 59, no. 8, pp. 2220–2229, Aug. 2010.
