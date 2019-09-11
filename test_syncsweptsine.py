@@ -173,7 +173,7 @@ def test_inverted_sync_sweep_spectrum():
     assume(len(ispec.spectrum) == (2*FFTLEN//2+1))
     assume(len(ispec) == len(ispec.spectrum))
     assume(np.all(ispec.spectrum[::-1] == ispec[::-1]))
-    assume(np.array(ispec, dtype='complex256').dtype == np.complex256)
+    assume(np.array(ispec, dtype='complex64').dtype == np.complex64)
     assume(ispec.__repr__().startswith('InvertedSyncSweepSpectrum('))
 
 
@@ -239,7 +239,7 @@ def test_hammerstein_model():
         return 1.0 * sig + 0.25 * sig**2 + 0.125 * sig**3
 
     outsweep = nonlinear_system(np.array(sweep))
-    hhir = HigherHarmonicImpulseResponse.from_sweeps(sweep, outsweep)
+    hhir = HigherHarmonicImpulseResponse.from_sweeps(sweep, outsweep, regularize=False)
     hm = HammersteinModel.from_higher_harmonic_impulse_response(
         hhir, 2048, orders=(1, 2, 3), delay=0)
     assume(hm.orders==(1, 2, 3))
@@ -248,7 +248,7 @@ def test_hammerstein_model():
     assume(hm.__repr__().startswith('HammersteinModel('))
     expectedcoeffs = [1.0, 0.25, 0.125]
     for kernel, expc in zip(hm.kernels, expectedcoeffs):
-        assume(abs(np.percentile(abs(kernel.frf), 95)-expc) < 0.01)
+        assume(abs(np.median(abs(kernel.frf[100:200]))-expc) < 0.01)
 
     with pytest.raises(ValueError):
         hm = HammersteinModel.from_higher_harmonic_impulse_response(
