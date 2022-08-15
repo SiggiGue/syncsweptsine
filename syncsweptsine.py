@@ -867,7 +867,7 @@ class HigherHarmonicImpulseResponse(object):
             reguspec = invert_spectrum_reg(rinvspec*sweepspec, beta=regularize)
             rinvspec[1:] = rinvspec[1:]*reguspec[1:]
         else:
-            rspec /=  syncsweep.samplerate
+            rspec /= syncsweep.samplerate
         return cls.from_spectra(
             rspec=rspec,
             rinvspec=rinvspec,
@@ -915,7 +915,7 @@ class FrfFilterKernel(object):
 
     """
     def __init__(self, freq, frf, ir=None):
-        if len(freq) !=  len(frf):
+        if len(freq) != len(frf):
             raise ValueError('`freq` and `frf` must have the same length, not ', len(freq), len(frf))
         self._frf = frf
         self._freq = freq
