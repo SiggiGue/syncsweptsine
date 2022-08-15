@@ -95,7 +95,7 @@ for theo, kernel, order in zip(hm_theo.kernels, hm_identified.kernels, orders):
     ylabel('$\\phi$ / rad')
     grid()
     lines = l0 + l1 + l2 + l3
-    labels = [l.get_label() for l in lines]
+    labels = [line.get_label() for line in lines]
     legend(lines, labels)
     xlabel('Frequency $f$ / Hz')
 
