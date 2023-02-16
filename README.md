@@ -8,15 +8,16 @@
 
 This project implements the Synchronized Swept Sine Method as a reusable python package.
 It is structured according to the papers by [Novak et al. 2015](https://doi.org/10.17743/jaes.2015.0071) and [Novak et al. 2010](https://doi.org/10.1109/TIM.2009.2031836), but equations and symbol names are adapted to code conventions, also known as PEP 8.
-Anyway, references to symbols and equations are given in the code comments. 
+However, references to symbols and equations are given in the code comments. 
 Most important classes are
 
 -  `SyncSweep` for the generation of the synchronized swept sine singal
 -  `HigherHarmonicImpulseResponse` for the deconvolution from sweep input and output signal.
--  `HammersteinModel` filtering of signals with the hammerstein model.
--  `LinearModel` filtering of signals with the linear kernel e.g.  from a `HigherHarmonicImpulseResponse`
+-  `HammersteinModel` estimation and filtering of signals with the hammerstein model.
+-  `LinearModel` estimation and filtering of signals with the linear kernel e.g.  from a `HigherHarmonicImpulseResponse`
 
 Examples are placed in the examples folder.
+A small example, estimating the coefficients of a nonlinear system, is listed below:
 
 ```python
 import numpy as np
