@@ -761,7 +761,10 @@ class HigherHarmonicImpulseResponse(object):
 
     def hir_time_position(self, order):
         """Returns the time delay for the harmonic impulse response of `order`."""
-        return self._sweepperiod * _np.log(order)
+        if order == 1:
+            return 0
+        else: 
+            return len(self.hhir)/self._samplerate - self._sweepperiod * _np.log(order)
 
     def hir_sample_position(self, order):
         """Returns the sample delay for the harmonic impulse response of `order`."""
@@ -780,11 +783,7 @@ class HigherHarmonicImpulseResponse(object):
             Delay of system under test the hhir was derived from.
 
         """
-        return (_np.arange(length)
-            + len(self.hhir)
-            - length//2  # because the returned impulse response is acausal
-            - self.hir_sample_position(order)
-            + delay)
+        return _np.arange(length)+delay+self.hir_sample_position(order)
 
     def max_hir_length(self, order):
         """Returns the maximum length of mpulse responses for given orders.
@@ -806,8 +805,10 @@ class HigherHarmonicImpulseResponse(object):
         Depending on the highest order there is a maximum length.
 
         """
-        maxorder = order + 1
-        distance = self.hir_sample_position(maxorder) - self.hir_sample_position(maxorder - 1)
+        if order == 1:
+            return len(self.hhir)//2-1
+        else:
+            distance = self.hir_sample_position(order) - self.hir_sample_position(order + 1)
         return distance
 
     def harmonic_impulse_response(self, order, length=None, delay=0, window=None):
@@ -829,12 +830,14 @@ class HigherHarmonicImpulseResponse(object):
             self.hir_index(order, length, delay),
             mode='wrap')
         if _np.any(window):
-            if isinstance(window, int):
+            if isinstance(window, (int, _np.integer)):
                 if window == True:
                     window = length//2
                 sig = hannramp(sig, left=window, right=window)
             elif (type(window) == _np.ndarray) and len(window):
                 sig = sig*window
+            else:   
+                raise ValueError(f'could not interpret window input {window}')
         return sig
 
     @classmethod
@@ -1207,7 +1210,7 @@ class LinearModel(object):
         return self._kernel
 
     @classmethod
-    def from_sweeps(cls, syncsweep, measuredsweep, delay=0, irlength=None, window=None, fftlen=None, regularize=1e-6, bandpass=True):
+    def from_sweeps(cls, syncsweep: SyncSweep, measuredsweep, delay=0, irlength=None, window=None, fftlen=None, regularize=1e-6, bandpass=True):
         """Returns a LinerModel for given sweeps
 
         Parameters
@@ -1247,7 +1250,14 @@ class LinearModel(object):
         return instance
 
     @classmethod
-    def from_higher_harmonic_impulse_response(cls, hhir, length=None, delay=0, window=None, startfreq=None, stopfreq=None):
+    def from_higher_harmonic_impulse_response(
+            cls, 
+            hhir: HigherHarmonicImpulseResponse, 
+            length=None, 
+            delay=0, 
+            window=None, 
+            startfreq=None, 
+            stopfreq=None):
         """Returns a LinerModel for given HigherHarmonicImpulseResponse
 
         Parameters
