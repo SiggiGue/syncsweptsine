@@ -649,7 +649,7 @@ class InvertedSyncSweepSpectrum(object):
         sweepperiod = self._sweepperiod
         startfreq = self._startfreq
         freq = _np.linspace(0, samplerate/2, int(_np.round(self.fftlen/2+1)))
-        spectrum = _np.zeros_like(freq, dtype=_np.complex)
+        spectrum = _np.zeros_like(freq, dtype=_np.complex_)
         # eq. 43 definition of the inverse spectrum in frequency domain
         spectrum[1:] = (
             2*_np.sqrt(freq[1:]/sweepperiod) 
@@ -783,7 +783,7 @@ class HigherHarmonicImpulseResponse(object):
             Delay of system under test the hhir was derived from.
 
         """
-        return _np.arange(length)+delay+self.hir_sample_position(order)
+        return _np.arange(length, dtype=int)+int(delay)+self.hir_sample_position(order)
 
     def max_hir_length(self, order):
         """Returns the maximum length of mpulse responses for given orders.
@@ -856,7 +856,7 @@ class HigherHarmonicImpulseResponse(object):
             Length of the calculated ffts. fftlen will be guessed from measuredsweep length if fftlen is None.
 
         """
-        fftlen = fftlen or _np.int(2**_np.ceil(1+_np.log2(len(measuredsweep))))
+        fftlen = fftlen or int(2**_np.ceil(1+_np.log2(len(measuredsweep))))
         rspec = _np.fft.rfft(measuredsweep, fftlen)
         rinvspec = InvertedSyncSweepSpectrum.from_sweep(syncsweep, fftlen=fftlen).spectrum
         freq = _np.fft.rfftfreq(fftlen, 1/syncsweep.samplerate)

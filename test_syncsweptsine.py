@@ -181,11 +181,11 @@ def test_higher_harmonic_impulse_response():
     sweep = SyncSweep(10, 10000, 5, 20000)
     hhir = HigherHarmonicImpulseResponse.from_sweeps(sweep, sweep)
     assume(np.all(np.array(hhir) == hhir.hhir))
-    hir = hhir.harmonic_impulse_response(order=1, length=1024, delay=0, window=True)
+    hir = hhir.harmonic_impulse_response(order=1, length=1024, delay=-512, window=True)
     assume(type(hir) == np.ndarray)
     assume(len(hir) == 1024)
     assume(np.argmax(hir)==512)
-    hir = hhir.harmonic_impulse_response(order=1, length=1024, delay=0, window=np.linspace(0, 1, 1024))
+    hir = hhir.harmonic_impulse_response(order=1, length=1024, delay=-512, window=np.linspace(0, 1, 1024))
     assume(type(hir) == np.ndarray)
     assume(len(hir) == 1024)
     assume(np.argmax(hir)==512)
@@ -238,18 +238,19 @@ def test_hammerstein_model():
     outsweep = nonlinear_system(np.array(sweep))
     hhir = HigherHarmonicImpulseResponse.from_sweeps(sweep, outsweep, regularize=False)
     hm = HammersteinModel.from_higher_harmonic_impulse_response(
-        hhir, 2048, orders=(1, 2, 3), delay=0)
+        hhir, 2048, orders=(1, 2, 3), delay=-1024)  # -delay since irs are acausal in this case.
     assume(hm.orders==(1, 2, 3))
     x = np.array([1]+127*[0])
     hm.filter(x)
     assume(hm.__repr__().startswith('HammersteinModel('))
     expectedcoeffs = [1.0, 0.25, 0.125]
     for kernel, expc in zip(hm.kernels, expectedcoeffs):
+        print(abs(np.median(abs(kernel.frf[100:200]))), expc)
         assume(abs(np.median(abs(kernel.frf[100:200]))-expc) < 0.01)
 
     with pytest.raises(ValueError):
         hm = HammersteinModel.from_higher_harmonic_impulse_response(
-            hhir, 96e4, orders=(1, 2, 3), delay=0)
+            hhir, hhir.max_hir_length(1)+1, orders=(1, 2, 3), delay=-1024)
     lm = LinearModel.from_hammerstein_model(hm)
 
 
@@ -266,7 +267,7 @@ def test_linear_model():
     y = lm.filter(x)
     with pytest.raises(ValueError):
         hm = LinearModel.from_higher_harmonic_impulse_response(
-            hhir, 96e4, delay=0)
+            hhir, hhir.max_hir_length(1)+1, delay=0)
 
 
 if __name__ == "__main__":
