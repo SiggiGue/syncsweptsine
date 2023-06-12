@@ -168,6 +168,7 @@ from scipy.special import binom as _binom
 import scipy.signal as _spsignal
 import numpy as _np
 
+__version__ = '0.2.0'
 
 def _typed_property(name, expected_type, desc=None):
     """Returns a type checked property

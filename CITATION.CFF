@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+title: syncsweptsine
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Siegfried
+    family-names: Gündert
+    email: siegfried.guendert@gmail.com
+repository-code: 'https://github.com/SiggiGue/syncsweptsine'
+abstract: >-
+  syncsweptsine implements the exponential sweep method
+  based on Novak et al. 2015, 2010 as reusable python package.
+license: MPL-2.0
+version: 0.2.0
