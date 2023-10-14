@@ -1,5 +1,7 @@
 # Synchronized Swept Sine Method
 
+[![CodeFactor](https://www.codefactor.io/repository/github/siggigue/syncsweptsine/badge)](https://www.codefactor.io/repository/github/siggigue/syncsweptsine)
+
 [![Coverage Status](https://coveralls.io/repos/github/SiggiGue/syncsweptsine/badge.svg)](https://coveralls.io/github/SiggiGue/syncsweptsine)
 
 [![Documentation Status](https://readthedocs.org/projects/syncsweptsine/badge/?version=latest)](https://syncsweptsine.readthedocs.io/en/latest/?badge=latest)
