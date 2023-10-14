@@ -2,3 +2,4 @@ numpydoc
 numpy
 scipy
 matplotlib
+sphinx-rtd-theme
