@@ -368,6 +368,12 @@ class SyncSweep(object):
         self._update()
         return self._time
 
+    @property
+    def phi(self):
+        """Returns the sweep argument."""
+        self._update()
+        return self._phi
+
     def _update(self):
         """Updates the sweep if properties were changed."""
         if self._typed_property_was_changed:
@@ -413,6 +419,7 @@ class SyncSweep(object):
         self._duration = duration
         self._time = time
         self._signal = sweep
+        self._phi = phi
 
     def get_windowed_signal(self, left, right, pausestart=0, pausestop=0, amplitude=1):
         """Returns windowd sweep signal
@@ -649,7 +656,7 @@ class InvertedSyncSweepSpectrum(object):
         samplerate = self._samplerate
         sweepperiod = self._sweepperiod
         startfreq = self._startfreq
-        freq = _np.linspace(0, samplerate/2, int(_np.round(self.fftlen/2+1)))
+        freq = _np.fft.rfftfreq(self.fftlen, 1/samplerate)
         spectrum = _np.zeros_like(freq, dtype=_np.complex_)
         # eq. 43 definition of the inverse spectrum in frequency domain
         spectrum[1:] = (
