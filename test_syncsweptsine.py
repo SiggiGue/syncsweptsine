@@ -150,12 +150,14 @@ def test_spectrum_to_minimum_phase():
     assume(np.allclose(np.unwrap(np.angle(H)), min_phase))
 
 def test_inverted_sync_sweep_spectrum():
-    FFTLEN = 1024
+    FFTLEN_EVEN = 1024
+    FFTLEN_ODD = 1025
+
     sweep = SyncSweep(10, 1000, 2, 2000)
-    ispec = InvertedSyncSweepSpectrum.from_sweep(sweep, fftlen=FFTLEN)
-    assume(ispec.fftlen == FFTLEN)
-    assume(len(ispec.freq) == (FFTLEN//2+1))
-    assume(len(ispec.spectrum) == (FFTLEN//2+1))
+    ispec = InvertedSyncSweepSpectrum.from_sweep(sweep, fftlen=FFTLEN_EVEN)
+    assume(ispec.fftlen == FFTLEN_EVEN)
+    assume(len(ispec.freq) == (FFTLEN_EVEN//2+1))
+    assume(len(ispec.spectrum) == (FFTLEN_EVEN//2+1))
     assume(ispec.spectrum[0] == 0j)
     expected_invspec = np.zeros_like(ispec.spectrum)
     expected_invspec[0] = 0j
@@ -167,15 +169,19 @@ def test_inverted_sync_sweep_spectrum():
         )
     assume(np.allclose(ispec.spectrum, expected_invspec))
 
-    ispec.fftlen = 2*FFTLEN
-    assume(ispec.fftlen == 2*FFTLEN)
-    assume(len(ispec.freq) == (2*FFTLEN//2+1))
-    assume(len(ispec.spectrum) == (2*FFTLEN//2+1))
+    ispec.fftlen = 2*FFTLEN_EVEN
+    assume(ispec.fftlen == 2*FFTLEN_EVEN)
+    assume(len(ispec.freq) == (2*FFTLEN_EVEN//2+1))
+    assume(len(ispec.spectrum) == (2*FFTLEN_EVEN//2+1))
     assume(len(ispec) == len(ispec.spectrum))
     assume(np.all(ispec.spectrum[::-1] == ispec[::-1]))
     assume(np.array(ispec, dtype='complex64').dtype == np.complex64)
     assume(ispec.__repr__().startswith('InvertedSyncSweepSpectrum('))
 
+    ispec.fftlen = FFTLEN_ODD
+    assume(ispec.fftlen == FFTLEN_ODD)
+    assume(len(ispec.freq) == ((FFTLEN_ODD+1)//2))
+    assume(len(ispec.spectrum) == ((FFTLEN_ODD+1)//2))
 
 def test_higher_harmonic_impulse_response():
     sweep = SyncSweep(10, 10000, 5, 20000)
