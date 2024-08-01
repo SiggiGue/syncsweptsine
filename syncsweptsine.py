@@ -370,7 +370,7 @@ class SyncSweep(object):
 
     @property
     def phi(self):
-        """Returns the sweep argument."""
+        """Returns the instantaneous phase."""
         self._update()
         return self._phi
 
