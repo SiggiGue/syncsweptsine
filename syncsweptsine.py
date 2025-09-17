@@ -657,7 +657,7 @@ class InvertedSyncSweepSpectrum(object):
         sweepperiod = self._sweepperiod
         startfreq = self._startfreq
         freq = _np.fft.rfftfreq(self.fftlen, 1/samplerate)
-        spectrum = _np.zeros_like(freq, dtype=_np.complex_)
+        spectrum = _np.zeros_like(freq, dtype=_np.complex128)
         # eq. 43 definition of the inverse spectrum in frequency domain
         spectrum[1:] = (
             2*_np.sqrt(freq[1:]/sweepperiod) 

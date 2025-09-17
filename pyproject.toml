@@ -1,14 +1,14 @@
 [tool.poetry]
 name = "syncsweptsine"
-version = "0.2.0"
+version = "0.2.1"
 description = "Synchronized Swept Sine Method according to Nowak et al. 2015."
 authors = ["Siegfried Gündert <siegfried.guendert-a-gmail.com>"]
 license = "MPL-2.0"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-numpy = "^1.16"
-scipy = "^1.3"
+numpy = ">=1.16"
+scipy = ">=1.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^4.6"
