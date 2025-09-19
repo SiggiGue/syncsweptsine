@@ -175,7 +175,7 @@ def test_inverted_sync_sweep_spectrum():
     assume(len(ispec.spectrum) == (2*FFTLEN_EVEN//2+1))
     assume(len(ispec) == len(ispec.spectrum))
     assume(np.all(ispec.spectrum[::-1] == ispec[::-1]))
-    assume(np.array(ispec, dtype='complex64').dtype == np.complex64)
+    assume(np.asarray(ispec, dtype='complex64').dtype == np.complex64)
     assume(ispec.__repr__().startswith('InvertedSyncSweepSpectrum('))
 
     ispec.fftlen = FFTLEN_ODD
@@ -186,7 +186,7 @@ def test_inverted_sync_sweep_spectrum():
 def test_higher_harmonic_impulse_response():
     sweep = SyncSweep(10, 10000, 5, 20000)
     hhir = HigherHarmonicImpulseResponse.from_sweeps(sweep, sweep)
-    assume(np.all(np.array(hhir) == hhir.hhir))
+    assume(np.all(np.asarray(hhir) == hhir.hhir))
     hir = hhir.harmonic_impulse_response(order=1, length=1024, delay=-512, window=True)
     assume(type(hir) == np.ndarray)
     assume(len(hir) == 1024)
@@ -206,7 +206,7 @@ def test_frf_filter_kernel():
     y[0] = 1
     fk.filter(y)
     assume(np.all(fk.freq == freq))
-    assume(np.all(fk.frf == np.array(fk)))
+    assume(np.all(fk.frf == np.asarray(fk)))
     assume(fk.__repr__().startswith('FrfFilterKernel('))
     with pytest.raises(ValueError):
         FrfFilterKernel(np.zeros(32), np.zeros(16))
@@ -241,7 +241,7 @@ def test_hammerstein_model():
     def nonlinear_system(sig):
         return 1.0 * sig + 0.25 * sig**2 + 0.125 * sig**3
 
-    outsweep = nonlinear_system(np.array(sweep))
+    outsweep = nonlinear_system(np.asarray(sweep))
     hhir = HigherHarmonicImpulseResponse.from_sweeps(sweep, outsweep, regularize=False)
     hm = HammersteinModel.from_higher_harmonic_impulse_response(
         hhir, 2048, orders=(1, 2, 3), delay=-1024)  # -delay since irs are acausal in this case.
@@ -266,7 +266,7 @@ def test_linear_model():
     def nonlinear_system(sig):
         return 0.5 * sig + 0.25 * sig**2 + 0.125 * sig**3
 
-    outsweep = nonlinear_system(np.array(sweep))
+    outsweep = nonlinear_system(np.asarray(sweep))
     hhir = HigherHarmonicImpulseResponse.from_sweeps(sweep, outsweep)
     lm = LinearModel.from_higher_harmonic_impulse_response(hhir, length=1024)
     x = np.array([1]+127*[0])
